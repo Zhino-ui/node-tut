@@ -1,17 +1,16 @@
-const http = require('http');
-const server = http.createServer((req,res)=>{
-    if(req.url === '/'){
-        res.end('Welcome to our hom page')
-    }
-    if(req.url === '/about'){
-        res.end('Here is our short history')
-    }
-    else{
-        res.end(`
-    <h1>Oops!</h1>
-    <p>We cant seem to find the page you are looking for</p>
-    <a href="/">back home</a>`)
-    }
-})
+var http =  require('http')
+var fs = require('fs')
 
-server.listen(5000)
+http.createServer(function(req,res){
+    // const text = fs.readFileSync('./content/big.txt', 'utf8')
+    // res.end(text)
+    const fileStream = fs.createReadStream('./content/big.txt', 'utf8')
+    fileStream.on('open',()=>{
+        fileStream.pipe(res)
+    })
+    fileStream.on('error',(err)=>{
+        res.end(err)
+    })
+})
+    
+    .listen(5000)
